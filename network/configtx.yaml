@@ -2,7 +2,7 @@ Organizations:
   - &OrdererOrg
     Name: Orderer
     ID: OrdererMSP
-    MSPDir: crypto-config/ordererOrganizations/certification-network.com/msp
+    MSPDir: crypto-config/ordererOrganizations/pharma-network.com/msp
     Policies:
       Readers:
         Type: Signature
@@ -14,64 +14,97 @@ Organizations:
         Type: Signature
         Rule: "OR('OrdererMSP.member')"
 
-  - &iit
-    Name: iitMSP
-    ID: iitMSP
-    MSPDir: crypto-config/peerOrganizations/iit.certification-network.com/msp
+  - &manufacturer
+    Name: manufacturerMSP
+    ID: manufacturerMSP
+    MSPDir: crypto-config/peerOrganizations/manufacturer.pharma-network.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('iitMSP.admin', 'iitMSP.peer', 'iitMSP.client')"
+        Rule: "OR('manufacturerMSP.admin', 'manufacturerMSP.peer', 'manufacturerMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('iitMSP.admin', 'iitMSP.peer', 'iitMSP.client')"
+        Rule: "OR('manufacturerMSP.admin', 'manufacturerMSP.peer', 'manufacturerMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('iitMSP.admin', 'iitMSP.peer', 'iitMSP.client')"
+        Rule: "OR('manufacturerMSP.admin', 'manufacturerMSP.peer', 'manufacturerMSP.client')"
     AnchorPeers:
-      - Host: peer0.iit.certification-network.com
-        Port: 7051
+      - Host: peer0.manufacturer.pharma-network.com
+        Port: 11000
 
-  - &mhrd
-    Name: mhrdMSP
-    ID: mhrdMSP
-    MSPDir: crypto-config/peerOrganizations/mhrd.certification-network.com/msp
+  - &distributor
+    Name: distributorMSP
+    ID: distributorMSP
+    MSPDir: crypto-config/peerOrganizations/distributor.pharma-network.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('mhrdMSP.admin', 'mhrdMSP.peer', 'mhrdMSP.client')"
+        Rule: "OR('distributorMSP.admin', 'distributorMSP.peer', 'distributorMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('mhrdMSP.admin', 'mhrdMSP.peer', 'mhrdMSP.client')"
+        Rule: "OR('distributorMSP.admin', 'distributorMSP.peer', 'distributorMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('mhrdMSP.admin', 'mhrdMSP.peer', 'mhrdMSP.client')"
+        Rule: "OR('distributorMSP.admin', 'distributorMSP.peer', 'distributorMSP.client')"
     AnchorPeers:
-      - Host: peer0.mhrd.certification-network.com
-        Port: 9051
+      - Host: peer0.distributor.pharma-network.com
+        Port: 12000
 
-  - &upgrad
-    Name: upgradMSP
-    ID: upgradMSP
-    MSPDir: crypto-config/peerOrganizations/upgrad.certification-network.com/msp
+  - &retailer
+    Name: retailerMSP
+    ID: retailerMSP
+    MSPDir: crypto-config/peerOrganizations/retailer.pharma-network.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('upgradMSP.admin', 'upgradMSP.peer', 'upgradMSP.client')"
+        Rule: "OR('retailerMSP.admin', 'retailerMSP.peer', 'retailerMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('upgradMSP.admin', 'upgradMSP.peer', 'upgradMSP.client')"
+        Rule: "OR('retailerMSP.admin', 'retailerMSP.peer', 'retailerMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('upgradMSP.admin', 'upgradMSP.peer', 'upgradMSP.client')"
+        Rule: "OR('retailerMSP.admin', 'retailerMSP.peer', 'retailerMSP.client')"
     AnchorPeers:
-      - Host: peer0.upgrad.certification-network.com
-        Port: 11051
+      - Host: peer0.retailer.pharma-network.com
+        Port: 13000
 
+  - &consumer
+    Name: consumerMSP
+    ID: consumerMSP
+    MSPDir: crypto-config/peerOrganizations/consumer.pharma-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('consumerMSP.admin', 'consumerMSP.peer', 'consumerMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('consumerMSP.admin', 'consumerMSP.peer', 'consumerMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('consumerMSP.admin', 'consumerMSP.peer', 'consumerMSP.client')"
+    AnchorPeers:
+      - Host: peer0.consumer.pharma-network.com
+        Port: 14000
 
+  - &transporter
+    Name: transporterMSP
+    ID: transporterMSP
+    MSPDir: crypto-config/peerOrganizations/transporter.pharma-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('transporterMSP.admin', 'transporterMSP.peer', 'transporterMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('transporterMSP.admin', 'transporterMSP.peer', 'transporterMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('transporterMSP.admin', 'transporterMSP.peer', 'transporterMSP.client')"
+    AnchorPeers:
+      - Host: peer0.transporter.pharma-network.com
+        Port: 15000
 
 #Capabilities
-
 Capabilities:
   Channel: &ChannelCapabilities
     V1_4_3: true
@@ -106,7 +139,7 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
   OrdererType: solo
   Addresses:
-    - orderer.certification-network.com:7050
+    - orderer.pharma-network.com:7050
   BatchTimeout: 2s
   BatchSize:
     MaxMessageCount: 10
@@ -161,19 +194,23 @@ Profiles:
       Capabilities:
         <<: *OrdererCapabilities
     Consortiums:
-      CertificationConsortium:
+      PharmaConsortium:
         Organizations:
-          - *iit
-          - *mhrd
-          - *upgrad
+          - *manufacturer
+          - *distributor
+          - *retailer
+          - *consumer
+          - *transporter
 
-  CertificationChannel:
-    Consortium: CertificationConsortium
+  PharmaChannel:
+    Consortium: PharmaConsortium
     Application:
       <<: *ApplicationDefaults
       Organizations:
-        - *iit
-        - *mhrd
-        - *upgrad
+        - *manufacturer
+        - *distributor
+        - *retailer
+        - *consumer
+        - *transporter
       Capabilities:
         <<: *ApplicationCapabilities

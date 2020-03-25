@@ -2,8 +2,8 @@ version: '2'
 
 services:
 
-  orderer.certification-network.com:
-    container_name: orderer.certification-network.com
+  orderer.pharma-network.com:
+    container_name: orderer.pharma-network.com
     image: hyperledger/fabric-orderer:latest
     environment:
       - FABRIC_LOGGING_SPEC=INFO
@@ -12,7 +12,7 @@ services:
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
-      # enabled TLS
+      # enable TLS
       - ORDERER_GENERAL_TLS_ENABLED=false
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
@@ -22,147 +22,238 @@ services:
     command: orderer
     volumes:
     - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-    - ../crypto-config/ordererOrganizations/certification-network.com/orderers/orderer.certification-network.com/msp:/var/hyperledger/orderer/msp
-    - ../crypto-config/ordererOrganizations/certification-network.com/orderers/orderer.certification-network.com/tls/:/var/hyperledger/orderer/tls
-    - orderer.certification-network.com:/var/hyperledger/production/orderer
+    - ../crypto-config/ordererOrganizations/pharma-network.com/orderers/orderer.pharma-network.com/msp:/var/hyperledger/orderer/msp
+    - ../crypto-config/ordererOrganizations/pharma-network.com/orderers/orderer.pharma-network.com/tls/:/var/hyperledger/orderer/tls
+    - orderer.pharma-network.com:/var/hyperledger/production/orderer
     ports:
       - 7050:7050
 
-  peer0.iit.certification-network.com:
-    container_name: peer0.iit.certification-network.com
+  peer0.manufacturer.pharma-network.com:
+    container_name: peer0.manufacturer.pharma-network.com
     extends:
       file: docker-compose-peer.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.iit.certification-network.com
-      - CORE_PEER_ADDRESS=peer0.iit.certification-network.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.iit.certification-network.com:7053
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7053
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.iit.certification-network.com:8051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.iit.certification-network.com:7051
-      - CORE_PEER_LOCALMSPID=iitMSP
+      - CORE_PEER_ID=peer0.manufacturer.pharma-network.com
+      - CORE_PEER_ADDRESS=peer0.manufacturer.pharma-network.com:11000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:11000
+      - CORE_PEER_CHAINCODEADDRESS=peer0.manufacturer.pharma-network.com:11003
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:11003
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.manufacturer.pharma-network.com:11100
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.manufacturer.pharma-network.com:11000
+      - CORE_PEER_LOCALMSPID=manufacturerMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/iit.certification-network.com/peers/peer0.iit.certification-network.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/iit.certification-network.com/peers/peer0.iit.certification-network.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.iit.certification-network.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/manufacturer.pharma-network.com/peers/peer0.manufacturer.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/manufacturer.pharma-network.com/peers/peer0.manufacturer.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.manufacturer.pharma-network.com:/var/hyperledger/production
     ports:
-      - 7051:7051
-      - 7053:7053
+      - 11000:11000
+      - 11003:11003
 
-  peer1.iit.certification-network.com:
-    container_name: peer1.iit.certification-network.com
+  peer1.manufacturer.pharma-network.com:
+    container_name: peer1.manufacturer.pharma-network.com
     extends:
       file: docker-compose-peer.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer1.iit.certification-network.com
-      - CORE_PEER_ADDRESS=peer1.iit.certification-network.com:8051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.iit.certification-network.com:8053
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8053
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.iit.certification-network.com:8051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.iit.certification-network.com:7051
-      - CORE_PEER_LOCALMSPID=iitMSP
+      - CORE_PEER_ID=peer1.manufacturer.pharma-network.com
+      - CORE_PEER_ADDRESS=peer1.manufacturer.pharma-network.com:11100
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:11100
+      - CORE_PEER_CHAINCODEADDRESS=peer0.manufacturer.pharma-network.com:11103
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:11103
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.manufacturer.pharma-network.com:11100
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.manufacturer.pharma-network.com:11000
+      - CORE_PEER_LOCALMSPID=manufacturerMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/iit.certification-network.com/peers/peer1.iit.certification-network.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/iit.certification-network.com/peers/peer1.iit.certification-network.com/tls:/etc/hyperledger/fabric/tls
-        - peer1.iit.certification-network.com:/var/hyperledger/production
-
+        - ../crypto-config/peerOrganizations/manufacturer.pharma-network.com/peers/peer1.manufacturer.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/manufacturer.pharma-network.com/peers/peer1.manufacturer.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.manufacturer.pharma-network.com:/var/hyperledger/production
     ports:
-      - 8051:8051
-      - 8053:8053
+      - 11100:11100
+      - 11103:11103
 
-  peer0.mhrd.certification-network.com:
-    container_name: peer0.mhrd.certification-network.com
+  peer0.distributor.pharma-network.com:
+    container_name: peer0.distributor.pharma-network.com
     extends:
       file: docker-compose-peer.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.mhrd.certification-network.com
-      - CORE_PEER_ADDRESS=peer0.mhrd.certification-network.com:9051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.mhrd.certification-network.com:9053
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9053
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.mhrd.certification-network.com:9051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.mhrd.certification-network.com:10051
-      - CORE_PEER_LOCALMSPID=mhrdMSP
+      - CORE_PEER_ID=peer0.distributor.pharma-network.com
+      - CORE_PEER_ADDRESS=peer0.distributor.pharma-network.com:12000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:12000
+      - CORE_PEER_CHAINCODEADDRESS=peer0.distributor.pharma-network.com:12003
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:12003
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.distributor.pharma-network.com:12100
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.distributor.pharma-network.com:12000
+      - CORE_PEER_LOCALMSPID=distributorMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/mhrd.certification-network.com/peers/peer0.mhrd.certification-network.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/mhrd.certification-network.com/peers/peer0.mhrd.certification-network.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.mhrd.certification-network.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/distributor.pharma-network.com/peers/peer0.distributor.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/distributor.pharma-network.com/peers/peer0.distributor.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.distributor.pharma-network.com:/var/hyperledger/production
     ports:
-      - 9051:9051
-      - 9053:9053
+      - 12000:12000
+      - 12003:12003
 
-  peer1.mhrd.certification-network.com:
-    container_name: peer1.mhrd.certification-network.com
+  peer1.distributor.pharma-network.com:
+    container_name: peer1.distributor.pharma-network.com
     extends:
       file: docker-compose-peer.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer1.mhrd.certification-network.com
-      - CORE_PEER_ADDRESS=peer1.mhrd.certification-network.com:10051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.mhrd.certification-network.com:10053
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10053
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.mhrd.certification-network.com:10051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.mhrd.certification-network.com:9051
-      - CORE_PEER_LOCALMSPID=mhrdMSP
+      - CORE_PEER_ID=peer1.distributor.pharma-network.com
+      - CORE_PEER_ADDRESS=peer1.distributor.pharma-network.com:12100
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:12100
+      - CORE_PEER_CHAINCODEADDRESS=peer0.distributor.pharma-network.com:12103
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:12103
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.distributor.pharma-network.com:12100
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.distributor.pharma-network.com:12000
+      - CORE_PEER_LOCALMSPID=distributorMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/mhrd.certification-network.com/peers/peer1.mhrd.certification-network.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/mhrd.certification-network.com/peers/peer1.mhrd.certification-network.com/tls:/etc/hyperledger/fabric/tls
-        - peer1.mhrd.certification-network.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/distributor.pharma-network.com/peers/peer1.distributor.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/distributor.pharma-network.com/peers/peer1.distributor.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.distributor.pharma-network.com:/var/hyperledger/production
     ports:
-      - 10051:10051
-      - 10053:10053
+      - 12100:12100
+      - 12103:12103
 
-  peer0.upgrad.certification-network.com:
-    container_name: peer0.upgrad.certification-network.com
+  peer0.retailer.pharma-network.com:
+    container_name: peer0.retailer.pharma-network.com
     extends:
       file: docker-compose-peer.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.upgrad.certification-network.com
-      - CORE_PEER_ADDRESS=peer0.upgrad.certification-network.com:11051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:11051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.upgrad.certification-network.com:11053
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:11053
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.upgrad.certification-network.com:11051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.upgrad.certification-network.com:12051
-      - CORE_PEER_LOCALMSPID=upgradMSP
+      - CORE_PEER_ID=peer0.retailer.pharma-network.com
+      - CORE_PEER_ADDRESS=peer0.retailer.pharma-network.com:13000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:13000
+      - CORE_PEER_CHAINCODEADDRESS=peer0.retailer.pharma-network.com:13003
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:13003
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.retailer.pharma-network.com:13100
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.retailer.pharma-network.com:13000
+      - CORE_PEER_LOCALMSPID=retailerMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/upgrad.certification-network.com/peers/peer0.upgrad.certification-network.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/upgrad.certification-network.com/peers/peer0.upgrad.certification-network.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.upgrad.certification-network.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/retailer.pharma-network.com/peers/peer0.retailer.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/retailer.pharma-network.com/peers/peer0.retailer.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.retailer.pharma-network.com:/var/hyperledger/production
     ports:
-      - 11051:11051
-      - 11053:11053
+      - 13000:13000
+      - 13003:13003
 
-  peer1.upgrad.certification-network.com:
-    container_name: peer1.upgrad.certification-network.com
+  peer1.retailer.pharma-network.com:
+    container_name: peer1.retailer.pharma-network.com
     extends:
       file: docker-compose-peer.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer1.upgrad.certification-network.com
-      - CORE_PEER_ADDRESS=peer1.upgrad.certification-network.com:12051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:12051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.upgrad.certification-network.com:12053
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:12053
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.upgrad.certification-network.com:12051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.upgrad.certification-network.com:11051
-      - CORE_PEER_LOCALMSPID=upgradMSP
+      - CORE_PEER_ID=peer1.retailer.pharma-network.com
+      - CORE_PEER_ADDRESS=peer1.retailer.pharma-network.com:13100
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:13100
+      - CORE_PEER_CHAINCODEADDRESS=peer0.retailer.pharma-network.com:13103
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:13103
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.retailer.pharma-network.com:13100
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.retailer.pharma-network.com:13000
+      - CORE_PEER_LOCALMSPID=retailerMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/upgrad.certification-network.com/peers/peer1.upgrad.certification-network.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/upgrad.certification-network.com/peers/peer1.upgrad.certification-network.com/tls:/etc/hyperledger/fabric/tls
-        - peer1.upgrad.certification-network.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/retailer.pharma-network.com/peers/peer1.retailer.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/retailer.pharma-network.com/peers/peer1.retailer.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.retailer.pharma-network.com:/var/hyperledger/production
     ports:
-      - 12051:12051
-      - 12053:12053
+      - 13100:13100
+      - 13103:13103
+
+  peer0.consumer.pharma-network.com:
+    container_name: peer0.consumer.pharma-network.com
+    extends:
+      file: docker-compose-peer.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.consumer.pharma-network.com
+      - CORE_PEER_ADDRESS=peer0.consumer.pharma-network.com:14000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:14000
+      - CORE_PEER_CHAINCODEADDRESS=peer0.consumer.pharma-network.com:14003
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:14003
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.consumer.pharma-network.com:14100
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.consumer.pharma-network.com:14000
+      - CORE_PEER_LOCALMSPID=consumerMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/consumer.pharma-network.com/peers/peer0.consumer.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/consumer.pharma-network.com/peers/peer0.consumer.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.consumer.pharma-network.com:/var/hyperledger/production
+    ports:
+      - 14000:14000
+      - 14003:14003
+
+  peer1.consumer.pharma-network.com:
+    container_name: peer1.consumer.pharma-network.com
+    extends:
+      file: docker-compose-peer.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.consumer.pharma-network.com
+      - CORE_PEER_ADDRESS=peer1.consumer.pharma-network.com:14100
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:14100
+      - CORE_PEER_CHAINCODEADDRESS=peer0.consumer.pharma-network.com:14103
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:14103
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.consumer.pharma-network.com:14100
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.consumer.pharma-network.com:14000
+      - CORE_PEER_LOCALMSPID=consumerMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/consumer.pharma-network.com/peers/peer1.consumer.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/consumer.pharma-network.com/peers/peer1.consumer.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.consumer.pharma-network.com:/var/hyperledger/production
+    ports:
+      - 14100:14100
+      - 14103:14103
+
+  peer0.transporter.pharma-network.com:
+    container_name: peer0.transporter.pharma-network.com
+    extends:
+      file: docker-compose-peer.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.transporter.pharma-network.com
+      - CORE_PEER_ADDRESS=peer0.transporter.pharma-network.com:15000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:15000
+      - CORE_PEER_CHAINCODEADDRESS=peer0.transporter.pharma-network.com:15003
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:15003
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.transporter.pharma-network.com:15100
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.transporter.pharma-network.com:15000
+      - CORE_PEER_LOCALMSPID=transporterMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/transporter.pharma-network.com/peers/peer0.transporter.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/transporter.pharma-network.com/peers/peer0.transporter.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.transporter.pharma-network.com:/var/hyperledger/production
+    ports:
+      - 15000:15000
+      - 15003:15003
+
+  peer1.transporter.pharma-network.com:
+    container_name: peer1.transporter.pharma-network.com
+    extends:
+      file: docker-compose-peer.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.transporter.pharma-network.com
+      - CORE_PEER_ADDRESS=peer1.transporter.pharma-network.com:15100
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:15100
+      - CORE_PEER_CHAINCODEADDRESS=peer0.transporter.pharma-network.com:15103
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:15103
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.transporter.pharma-network.com:15100
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.transporter.pharma-network.com:15000
+      - CORE_PEER_LOCALMSPID=transporterMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/transporter.pharma-network.com/peers/peer1.transporter.pharma-network.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/transporter.pharma-network.com/peers/peer1.transporter.pharma-network.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.transporter.pharma-network.com:/var/hyperledger/production
+    ports:
+      - 15100:15100
+      - 15103:15103

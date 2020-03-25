@@ -1,27 +1,42 @@
 OrdererOrgs:
   - Name: Orderer
-    Domain: certification-network.com
+    Domain: pharma-network.com
     Specs:
       - Hostname: orderer
 PeerOrgs:
- - Name: iit
-   Domain: iit.certification-network.com
+ - Name: manufacturer
+   Domain: manufacturer.pharma-network.com
    EnableNodeOUs: true
    Template:
       Count: 2
    Users:
-      Count: 1
- - Name: mhrd
-   Domain: mhrd.certification-network.com
+      Count: 0
+ - Name: distributor
+   Domain: distributor.pharma-network.com
    EnableNodeOUs: true
    Template:
       Count: 2
    Users:
-      Count: 1
- - Name: upgrad
-   Domain: upgrad.certification-network.com
+      Count: 0
+ - Name: consumer
+   Domain: consumer.pharma-network.com
    EnableNodeOUs: true
    Template:
       Count: 2
    Users:
-      Count: 1
+      Count: 0
+ - Name: retailer
+   Domain: retailer.pharma-network.com
+   EnableNodeOUs: true
+   Template:
+      Count: 2
+   Users:
+      Count: 0
+ - Name: transporter
+   Domain: transporter.pharma-network.com
+   EnableNodeOUs: true
+   Template:
+      Count: 2
+   Users:
+      Count: 0
+

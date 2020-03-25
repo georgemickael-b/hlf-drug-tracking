@@ -1,0 +1,10 @@
+  ca.transporter.pharma-network.com:
+    url: http://localhost:11054
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: ../network/crypto-config/peerOrganizations/transporter.pharma-network.com/ca/ca.transporter.pharma-network.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    caName: ca.transporter.pharma-network.com
