@@ -10,7 +10,9 @@ const addDrug = require('./3_addDrug')
 const createPO = require('./4_createPO')
 const createShipment = require('./5_createShipment')
 const updateShipment = require('./6_updateShipment')
-
+const retailDrug = require('./7_retailDrug')
+const viewHistory = require('./8_viewHistory')
+const viewDrugCurrentState = require('./9_viewDrugCurrentState')
 
 // Define Express app settings
 app.use(cors());
@@ -41,17 +43,17 @@ app.post('/addToWallet', (req, res) => {
 });
 
 app.post('/registerCompany', (req, res) => {
-    const {companyCRN, companyName, location, organisationRole} = req.body
-	registerCompany.execute(organisationRole, companyCRN, companyName, location, organisationRole)
-			.then((company) => {
-				console.log('Company registered');
-				const result = {
-					status: 'success',
-					message: 'Company registered',
-					company: company
-				};
-				res.json(result);
-            })
+    const { companyCRN, companyName, location, organisationRole } = req.body
+    registerCompany.execute(organisationRole, companyCRN, companyName, location, organisationRole)
+        .then((company) => {
+            console.log('Company registered');
+            const result = {
+                status: 'success',
+                message: 'Company registered',
+                company: company
+            };
+            res.json(result);
+        })
         .catch((e) => {
             const result = {
                 status: 'error',
@@ -108,8 +110,8 @@ app.post('/createPO/:org', (req, res) => {
 });
 
 app.post('/createShipment/:org', (req, res) => {
-    const {buyerCRN, drugName, listOfAssets, transporterCRN  } = req.body
-    createShipment.execute(req.params.org, buyerCRN, drugName, listOfAssets, transporterCRN )
+    const { buyerCRN, drugName, listOfAssets, transporterCRN } = req.body
+    createShipment.execute(req.params.org, buyerCRN, drugName, listOfAssets, transporterCRN)
         .then((shipment) => {
             console.log('Shipment Created');
             const result = {
@@ -131,13 +133,80 @@ app.post('/createShipment/:org', (req, res) => {
 
 app.post('/updateShipment/:org', (req, res) => {
     const { buyerCRN, drugName, transporterCRN } = req.body
-    updateShipment.execute(req.params.org,  buyerCRN, drugName, transporterCRN )
+    updateShipment.execute(req.params.org, buyerCRN, drugName, transporterCRN)
         .then((shipment) => {
             console.log('Shipment Updated');
             const result = {
                 status: 'success',
                 message: 'Shipment Updated',
                 shipment
+            };
+            res.json(result);
+        })
+        .catch((e) => {
+            const result = {
+                status: 'error',
+                message: 'Failed',
+                error: e
+            };
+            res.status(500).send(result);
+        });
+});
+
+app.post('/retailDrug/:org', (req, res) => {
+    const { drugName, serialNo, retailerCRN, customerAadhar } = req.body
+    retailDrug.execute(req.params.org, drugName, serialNo, retailerCRN, customerAadhar)
+        .then((drug) => {
+            console.log('Drug Sold');
+            const result = {
+                status: 'success',
+                message: 'Drug Sold',
+                drug: drug
+            };
+            res.json(result);
+        })
+        .catch((e) => {
+            const result = {
+                status: 'error',
+                message: 'Failed',
+                error: e
+            };
+            res.status(500).send(result);
+        });
+});
+
+app.post('/viewHistory/:org', (req, res) => {
+    const { drugName, serialNo } = req.body
+    viewHistory.execute(req.params.org, drugName, serialNo)
+        .then((history) => {
+            console.log('History Fetched');
+            const result = {
+                status: 'success',
+                message: 'History Fetched',
+                history
+            };
+            res.json(result);
+        })
+        .catch((e) => {
+            const result = {
+                status: 'error',
+                message: 'Failed',
+                error: e
+            };
+            res.status(500).send(result);
+        });
+});
+
+
+app.post('/viewDrugCurrentState/:org', (req, res) => {
+    const { drugName, serialNo } = req.body
+    viewDrugCurrentState.execute(req.params.org, drugName, serialNo)
+        .then((drugCurrentState) => {
+            console.log('Drug Current State Fetched');
+            const result = {
+                status: 'success',
+                message: 'Drug Current State Fetched',
+                drugCurrentState
             };
             res.json(result);
         })

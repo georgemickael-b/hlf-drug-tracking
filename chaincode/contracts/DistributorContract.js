@@ -61,7 +61,13 @@ class DistributorContract extends Contract {
 		return companyCommons.registerCompany(...args)
 	}
 
+	async viewDrugCurrentState(...args){
+		return allCommons.viewDrugCurrentState(...args)
+	}
 
+	async viewHistory (ctx , drugName, serialNo){
+		return allCommons.viewHistory (ctx , drugName, serialNo)
+	}
 }
 
 module.exports = DistributorContract
